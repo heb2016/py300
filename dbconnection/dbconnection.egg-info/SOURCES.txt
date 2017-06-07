@@ -1,0 +1,6 @@
+README.rst
+setup.cfg
+dbconnection.egg-info/PKG-INFO
+dbconnection.egg-info/SOURCES.txt
+dbconnection.egg-info/dependency_links.txt
+dbconnection.egg-info/top_level.txt
