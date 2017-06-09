@@ -110,7 +110,9 @@ def get_import ():
 
 # create region_new column to sync wiht EDW request
 def new_region(row):
-   if row['Region'] == 62 :
+
+  ## could you store this in a dict and do the selection in one step?
+  if row['Region'] == 62 :
       return ('62 - South')
    if row['Region'] == 72 :
       return ('72 - East')
@@ -150,6 +152,13 @@ def merge_edw_excel():
     
     del df_merge_result_tmp['Region']
 
+    ## maybe a way to parameterize this, rather than repeated code:
+    ## labels_to_rename = [('Region_new', 'Region'), ('web_id', 'Web Id')]
+    ## for label in labels_to_rename:
+    ##    df_merge_result_tmp = df_merge_result_tmp.rename(columns={label[0]: label[1]})
+
+    # Do you need to re-assign, or does rename mutate it it place?
+    df_merge_result_tmp = df_merge_result_tmp.rename(columns={'web_id': 'Web Id'})
     df_merge_result_tmp = df_merge_result_tmp.rename(columns={'Region_new': 'Region'})
     df_merge_result_tmp = df_merge_result_tmp.rename(columns={'web_id': 'Web Id'})
     df_merge_result_tmp = df_merge_result_tmp.rename(columns={'Area': 'Zone'})
@@ -212,6 +221,7 @@ def write_output():
     print('\n')
   #  return (1)
 
+  ## nice job figuring out SMTP...
 def send_mail_app1(addr_from, subject, body_message, file_to_attach):
     '''
     Purpose: Prepare and send email message with attachments
@@ -239,7 +249,8 @@ def send_mail_app1(addr_from, subject, body_message, file_to_attach):
     server.sendmail(addr_from, RECIPIENTS, msg.as_string())
     server.quit()
 
-
+##CHB: This looks like repeated code -- could you mkae a more generic send_mail
+##     function that would do both?
 def send_mail_app0(addr_from, subject, body_message):
     '''
     Purpose: Prepare and send email message with attachments
@@ -307,6 +318,7 @@ def main():
         output_flag=write_output()
         send_email(output_flag)
     except (SystemExit, KeyboardInterrupt):
+      ## no need to catch the exception if you are just going to re-raise it.
         raise
  #   except Exception, e:
   #      logger.error('Failed to open file', exc_info=True) 
